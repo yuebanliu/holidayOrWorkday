@@ -87,7 +87,7 @@
     function cacheWorkDay($year){
 		$filename = __DIR__.'/data/'.$year . '.php';
 
-	    $appkey = 'd6fe2c62790e47db6f904e409483dc72';
+	    $appkey = 'xxxxx';
 	    $arr = [];
 	    //12个月
 	    for ($i = 1; $i <= 12; $i++) { 
