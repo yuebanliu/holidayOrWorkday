@@ -61,7 +61,7 @@
 		          "year-month" => $year_month,//指定月份,格式为YYYY-MM,如月份和日期小于10,则取个位,如:2012-1
 		    );
 		    $paramstring = http_build_query($params);
-		    $content = juhecurl($url,$paramstring);
+		    $content = curl($url,$paramstring);
 		    $result = json_decode($result,true);
 		    if($result){
 		        if( $result['error_code'] == '0' )
