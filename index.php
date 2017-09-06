@@ -113,6 +113,7 @@
 		 * @return boolean       [description]
 		 */
 		public function isWorkday($date){
+			$date = date('Y-n-j',strtotime($date));//转换一下
 			$tmpArr = explode('-',$date);
 			$filename = __DIR__.'/data/'.$tmpArr[0].'.php';
 
@@ -132,7 +133,7 @@
 
     }
 
-    $myAppkey = 'd6fe2c62790e47db6f904e409483dc72';//换上自己申请的免费APPkey
+    $myAppkey = 'xxxxxxxxxxx';//换上自己申请的免费APPkey
     $day = new holidayOrWorkday($myAppkey);
     $res = $day->isWorkday('2017-9-30');
     // echo '<pre>';
