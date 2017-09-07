@@ -54,15 +54,15 @@
 		  * @param  [type] $year_month [description]
 		  * @return [type]             [description]
 		  */
-		private function getRecentHoliday($appkey,$year_month){
+		private function getRecentHoliday($year_month){
 		    $url = "http://v.juhe.cn/calendar/month";
 		    $params = array(
 		          "key" => $this->appkey,//您申请的appKey
 		          "year-month" => $year_month,//指定月份,格式为YYYY-MM,如月份和日期小于10,则取个位,如:2012-1
 		    );
 		    $paramstring = http_build_query($params);
-		    $content = curl($url,$paramstring);
-		    $result = json_decode($result,true);
+		    $content = $this->curl($url,$paramstring);
+		    $result = json_decode($content,true);
 		    if($result){
 		        if( $result['error_code'] == '0' )
 		            return $result['result']['data'];
@@ -83,26 +83,42 @@
 			$filename = __DIR__.'/data/'.$year . '.php';
 
 		    $arr = [];
+		    $festival = [];//用来排除已经遍历过的
 		    //12个月
 		    for ($i = 1; $i <= 12; $i++) { 
-			    $recentHoliday = getRecentHoliday($year.'-'.$i);
+
+			    $recentHoliday = $this->getRecentHoliday($year.'-'.$i);
 
 			    if( is_array($recentHoliday) ){
 				    $holiday = json_decode($recentHoliday['holiday'],true);
+
+				    //需要判断是否是1个假日或者多个，多个比一个的多一维
+				    if( isset($holiday['festival']) ){
+				    	$holiday = [$holiday];
+				    }
+				    
 				    //多个假日循环
 				    foreach ( $holiday as $holi ) {
-				    	//每个假日放假或者工作循环
-				    	foreach ($holi['list'] as $one) {
-				    		if( !isset($arr[$one['date']]) ){
-				    			$arr[$one['date']] = [
-				    				'status' => ( $one['status'] == '2' ? 1 : 3 ),//工作日1倍，节假日3倍
-				    			];
-				    		}
+				    	//判断是否已经遍历过了
+				    	if( in_array($holi['festival'] , $festival) ){
+					    	continue;
 				    	}
+
+					    $festival[] = $holi['festival'];
+
+				    	//每个假日放假或者工作循环
+				    	if(!empty($holi['list'])){
+					    	foreach ($holi['list'] as $one) {
+					    		if( !isset($arr[$one['date']]) ){
+					    			$arr[$one['date']] = [
+					    				'status' => ( $one['status'] == '2' ? 1 : 3 ),//工作日1倍，节假日3倍
+					    			];
+					    		}
+					    	}
+					    }
 				    }
 				}
 			}
-
 			file_put_contents($filename,"<?php\n return ".var_export($arr,true)."\n?>");
 			return $arr;
 		}
@@ -117,11 +133,14 @@
 			$tmpArr = explode('-',$date);
 			$filename = __DIR__.'/data/'.$tmpArr[0].'.php';
 
+			$arr = [];
 			if(file_exists($filename)){
-				$arr = require_once($filename);
-			}else{
-				$arr = cacheWorkDay($tmpArr[0]);
+				$arr = require_once($filename);//这个也可能为空，那么就要重新生成
 			}
+
+			//如果arr数组为空，并且不大于当前年份，就去获取一下
+			if( empty($arr) && ( date('Y') >= $tmpArr[0] ) )
+				$arr = $this->cacheWorkDay($tmpArr[0]);
 
 			if( isset($arr[$date]) )
 				return $arr[$date];
@@ -133,11 +152,11 @@
 
     }
 
-    $myAppkey = 'xxxxxxxxxxx';//换上自己申请的免费APPkey
+    echo '<pre>';
+    $myAppkey = 'xxxxxxx';//换上自己申请的免费APPkey
     $day = new holidayOrWorkday($myAppkey);
-    $res = $day->isWorkday('2017-9-30');
-    // echo '<pre>';
-    // var_dump($res);
+    $res = $day->isWorkday('2016-9-30');
+    var_dump($res);
 
 
 
