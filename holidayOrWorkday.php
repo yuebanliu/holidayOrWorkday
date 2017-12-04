@@ -18,7 +18,8 @@
 		 * @return boolean       [description]
 		 */
 		public function isWorkday($date){
-			$date = date('Y-n-j',strtotime($date));//转换一下
+			$date_timestamp = strtotime($date);
+			$date = date('Y-n-j',$date_timestamp);//转换一下
 			$tmpArr = explode('-',$date);
 			$filename = __DIR__.'/data/'.$tmpArr[0].'.php';
 
@@ -28,12 +29,12 @@
 			}
 
 			//如果arr数组为空，并且不大于当前年份，就去获取一下
-			if( empty($arr) && ( date('Y') >= $tmpArr[0] ) )
+			if( empty($arr) && ( date('Y',$date_timestamp) >= $tmpArr[0] ) )
 				$arr = $this->cacheWorkDay($tmpArr[0]);
 
 			if( isset($arr[$date]) )
 				return $arr[$date];
-			elseif( date('w',strtotime($date)) == '6' || date('w',strtotime($date)) == '0')
+			elseif( date('w',$date_timestamp) == '6' || date('w',$date_timestamp) == '0')
 				return 2;
 			else
 				return 1;
