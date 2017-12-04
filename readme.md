@@ -19,19 +19,32 @@
 
 ## 使用
 
-可以通过composer安装
+### 注册聚合
+使用接口需要[注册](https://www.juhe.cn/register)聚合数据的账号，并[申请](https://www.juhe.cn/docs/api/id/177)对应的数据；在工具中需要填入对应的`appkey`
 
+### composer安装
+
+可以通过composer安装
 ```
 composer require liujia/holiday-or-workday
 ```
 
+### 实例化使用
 
-通过传入比如`2017-09-07`或者`2017-9-7`格式，返回对应日期的假日状态
+只需要调用一个`isWorkday`方法就可以了
+
+```
+$obj = new \HolidayOrWorkday\holidayOrWorkday('申请的appkey');
+var_dump($obj->isWorkday('2017-12-03'));
+```
+注意，命名空间和类名有一个大小写的差别
+
+### 返回值
+通过传入比如`2017-09-07`或者`2017-9-7`格式，返回对应日期的假日状态,返回值为数组形式
 ```php
 array(
 	'status' => 1,
 )
-
 ```
 这里定义的`status`的值,工作日为1，休息日为2（加班2倍工资），节假日为3（加班应该是3倍工资），方便计算O(∩_∩)O。
 
@@ -42,8 +55,6 @@ array(
 - 之后的判断直接使用
 
 ## 其他
-
-- 使用接口需要[注册](https://www.juhe.cn/register)聚合数据的账号，并[申请](https://www.juhe.cn/docs/api/id/177)对应的数据；在工具中需要填入对应的`appkey`
 
 - 组装的数据可以存放到任何文件或者任何存储中，本例为了使用方便，直接存到`php`文件中,最好放到缓存中
 

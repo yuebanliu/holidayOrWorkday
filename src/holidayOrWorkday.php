@@ -31,8 +31,10 @@
 			}
 
 			//如果arr数组为空，并且不大于当前年份，就去获取一下
-			if( empty($arr) && ( date('Y',$date_timestamp) >= $tmpArr[0] ) )
+			if( empty($arr) && ( date('Y') >= $tmpArr[0] ) ){
 				$arr = $this->cacheWorkDay($tmpArr[0]);
+			}
+			
 
 			if( isset($arr[$date]) )
 				return $arr[$date];
