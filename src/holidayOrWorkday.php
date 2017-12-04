@@ -6,10 +6,12 @@
 
     class holidayOrWorkday{
 
-    	private $appkey ;
+		private $appkey ;
+		private $rootPath ;
 
     	public function __construct($appkey){
-    		$this->appkey = $appkey;
+			$this->appkey = $appkey;
+			$this->rootPath = __DIR__.'/../';
     	}
 
     	/**
@@ -21,7 +23,7 @@
 			$date_timestamp = strtotime($date);
 			$date = date('Y-n-j',$date_timestamp);//转换一下
 			$tmpArr = explode('-',$date);
-			$filename = __DIR__.'/data/'.$tmpArr[0].'.php';
+			$filename = $this->rootPath.'data/'.$tmpArr[0].'.php';
 
 			$arr = [];
 			if(file_exists($filename)){
@@ -46,7 +48,7 @@
 	     * @return [type]       [description]
 	     */
 	    private function cacheWorkDay($year){
-			$filename = __DIR__.'/data/'.$year . '.php';
+			$filename = $this->rootPath.'data/'.$year . '.php';
 
 		    $arr = [];
 		    $festival = [];//用来排除已经遍历过的
@@ -223,13 +225,5 @@
 		}
 
     }
-
-    // echo '<pre>';
-    // $myAppkey = 'xxxxxxx';//换上自己申请的免费APPkey
-    // $day = new holidayOrWorkday($myAppkey);
-    // $res = $day->isWorkday('2016-9-30');
-    // var_dump($res);
-
-
 
 ?>
