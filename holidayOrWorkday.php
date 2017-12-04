@@ -1,6 +1,6 @@
 <?php
 
-
+	namespace HolidayOrWorkday;
     // header('Content-type:text/html;charset=utf-8');
 	use Cache;
 
@@ -223,11 +223,11 @@
 
     }
 
-    echo '<pre>';
-    $myAppkey = 'xxxxxxx';//换上自己申请的免费APPkey
-    $day = new holidayOrWorkday($myAppkey);
-    $res = $day->isWorkday('2016-9-30');
-    var_dump($res);
+    // echo '<pre>';
+    // $myAppkey = 'xxxxxxx';//换上自己申请的免费APPkey
+    // $day = new holidayOrWorkday($myAppkey);
+    // $res = $day->isWorkday('2016-9-30');
+    // var_dump($res);
 
 
 
